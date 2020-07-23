@@ -2,7 +2,7 @@ import firebase from "firebase";
 
 export function initializeFirestore () {
 	const firebaseConfig = {
-		apiKey: "AIzaSyAIrLhvRs4EXZJWNtD1SqTVKKk1R583Q_8",
+		apiKey: process.env.GOOGLE_API_KEY,
 		authDomain: "bartograph.firebaseapp.com",
 		databaseURL: "https://bartograph.firebaseio.com",
 		projectId: "bartograph",

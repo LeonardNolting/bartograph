@@ -14,7 +14,7 @@ class Map extends Component<{
 				<GoogleMapReact
 					heatmap={{}}
 					bootstrapURLKeys={{
-						key: process.env.GOOGLE_MAPS_API_KEY,
+						key: process.env.GOOGLE_API_KEY,
 						libraries: ['visualization'],
 					}}
 					defaultCenter={this.props.center}
