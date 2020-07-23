@@ -1,32 +1,54 @@
 import React, {Component} from "react";
 import GoogleMapReact from 'google-map-react';
+import Options from "../model/Options";
+import Fix, {fixes} from "../model/Fix";
 
 class Map extends Component<{
 	center: {
 		lat: number,
 		lng: number,
 	},
-	zoom: number
+	zoom: number,
+	options: Options,
+}, {
+	fixes: Array<Fix>
 }> {
-	render () {
+	componentDidMount() {
+		this.setState({
+			fixes: fixes(this.props.options)
+		})
+	}
+
+	render() {
 		return (
-			<div style={{height: '100vh', width: '100%'}}>
-				<GoogleMapReact
-					heatmap={{}}
-					bootstrapURLKeys={{
-						key: process.env.GOOGLE_API_KEY,
-						libraries: ['visualization'],
-					}}
-					defaultCenter={this.props.center}
-					defaultZoom={this.props.zoom}
-				>
-					{/*<AnyReactComponent
-						lat={59.955413}
-						lng={30.337844}
-						text="My Marker"
-					/>*/}
-				</GoogleMapReact>
-			</div>
+			<div style={{height: '100vh', width: '100%'}}>{
+				this.state.fixes.length === 0 ? <span>Loading...</span> :
+					<GoogleMapReact
+						heatmap={{
+							positions: this.state.fixes,
+							options: {
+								radius: 20,
+								opacity: 1,
+							},
+						}}
+						bootstrapURLKeys={{
+							key: process.env.GOOGLE_API_KEY,
+							libraries: ['visualization'],
+						}}
+						defaultCenter={this.props.center}
+						defaultZoom={this.props.zoom}
+						options={{
+							mapTypeId: 'hybrid',
+							disableDefaultUI: true,
+							zoomControl: true,
+							mapTypeControl: false,
+							scaleControl: true,
+							streetViewControl: false,
+							rotateControl: true,
+							fullscreenControl: false
+						}}
+					/>
+			}</div>
 		);
 	}
 

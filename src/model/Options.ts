@@ -2,8 +2,9 @@ import {Meter, Wind} from "../config";
 
 export default class Options {
 	constructor(
-		private height: Meter | null = null,
-		private wind: Wind | null = null
+		public height: Meter | null = null,
+		public wind: Wind | null = null,
+		public time: Date | null = null,
 	) {
 	}
 }
