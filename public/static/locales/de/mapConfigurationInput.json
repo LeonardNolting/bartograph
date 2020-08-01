@@ -1,0 +1,11 @@
+{
+	"header": "Konfiguration",
+	"description": "Bearbeite diese Optionen um bessere Ergebnisse zu erhalten.",
+	"altitude": "Höhe",
+	"wind-speed": "Windgeschwindigkeit",
+	"wind-direction": "Windrichtung",
+	"time": "Zeit",
+	"cancel": "Abbrechen",
+	"save": "Speichern",
+	"language": "Sprache"
+}

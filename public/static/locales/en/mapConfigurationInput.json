@@ -1,0 +1,11 @@
+{
+	"header": "Configuration",
+	"description": "Edit these options to get a more precise result.",
+	"altitude": "Altitude",
+	"wind-speed": "Wind speed",
+	"wind-direction": "Wind direction",
+	"time": "Time",
+	"cancel": "Cancel",
+	"save": "Save",
+	"language": "Language"
+}
