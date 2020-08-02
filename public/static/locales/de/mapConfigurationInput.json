@@ -4,8 +4,10 @@
 	"altitude": "Höhe",
 	"wind-speed": "Windgeschwindigkeit",
 	"wind-direction": "Windrichtung",
-	"time": "Zeit",
+	"time": "Ungefähre Uhrzeit",
 	"cancel": "Abbrechen",
 	"save": "Speichern",
-	"language": "Sprache"
+	"language": "Sprache",
+	"month": "Monat",
+	"now": "Jetzt"
 }

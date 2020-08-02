@@ -4,8 +4,10 @@
 	"altitude": "Altitude",
 	"wind-speed": "Wind speed",
 	"wind-direction": "Wind direction",
-	"time": "Time",
+	"time": "Approximate time of day",
 	"cancel": "Cancel",
 	"save": "Save",
-	"language": "Language"
+	"language": "Language",
+	"month": "Month",
+	"now": "Now"
 }

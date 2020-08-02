@@ -1,19 +1,19 @@
 import Map from "../components/Map";
-import React from "react";
-import config from "../config";
-import {LoadScript} from "@react-google-maps/api";
+import React, {Component} from "react";
+import Maps from "../components/Maps";
 
-const Home = () => (
-	<LoadScript
-		googleMapsApiKey={process.env.GOOGLE_API_KEY}
-		libraries={config.map.libraries}>
-		<Map center={config.map.center}
-		     zoom={config.map.zoom} />
-	</LoadScript>
-)
+class MapPage extends Component<{}, {
+	loading: boolean
+}> {
+	static getInitialProps = () => ({
+		namespacesRequired: ["map", "mapConfigurationInput"]
+	})
+	render = () => <>
 
-Home.getInitialProps = () => ({
-	namespacesRequired: ["map", "mapConfigurationInput"]
-})
+		<Maps>
+			<Map />
+		</Maps>
+	</>
+}
 
-export default Home
+export default MapPage

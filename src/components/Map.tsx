@@ -1,16 +1,16 @@
 import React, {Component} from "react";
 import Fix, {fixes} from "../model/Fix";
-import {GoogleMap, HeatmapLayer} from "@react-google-maps/api";
 import config from "../config";
-import {Fab, LinearProgress, Theme} from "@material-ui/core";
+import {Fab, Theme} from "@material-ui/core";
 import MapConfigurationInput from "./MapConfigurationInput";
 import {positions} from "../model/Position";
-import Configuration from "../model/Configuration";
+import MapConfiguration from "../model/MapConfiguration";
 import isEqual from "lodash/isEqual"
 import TuneIcon from '@material-ui/icons/Tune';
 import {createStyles, WithStyles, withStyles} from "@material-ui/styles";
 import {WithTranslation} from "next-i18next";
 import {withTranslation} from "../../i18n";
+import Heatmap from "./Heatmap";
 
 const styles = (theme: Theme) => createStyles({
 	fab: {
@@ -20,109 +20,100 @@ const styles = (theme: Theme) => createStyles({
 	},
 	fabIcon: {
 		marginRight: theme.spacing(1)
-	}
+	},
+	map: {height: "100%"},
 });
 
 interface Props extends WithStyles<typeof styles>, WithTranslation {
-	center: {
+	/*center: {
 		lat: number,
 		lng: number,
 	},
-	zoom: number,
+	zoom: number,*/
+	setUpdating?: (updating: boolean) => void
 }
 
 interface State {
+	map: google.maps.Map | null,
 	fixes: Array<Fix>,
 	configuring: boolean,
-	loading: boolean,
-	updating: boolean
 
-	configuration: Configuration
+	configuration: MapConfiguration
 }
 
 export default withStyles(styles, {withTheme: true})(
 	withTranslation("map")(
-	class Map extends Component<Props, State> {
-		state = {
-			fixes: [],
-			configuring: false,
-			loading: true,
-			updating: false,
+		class Map extends Component<Props, State> {
+			state = {
+				map: null,
+				heatmap: null,
+				fixes: [],
+				configuring: false,
 
-			configuration: {
-				altitude: null,
-				windSpeed: null,
-				windDirection: null,
-				time: null
+				configuration: {
+					altitude: null,
+					windSpeed: null,
+					windDirection: null,
+					time: null,
+					month: null
+				}
 			}
-		}
 
-		async componentDidMount() {
-			await this.update(this.state.configuration, true, true)
-			this.setState({loading: false})
-		}
+			async componentDidMount() {
+				await new Promise(resolve => this.setState({map: this.getMap()}, resolve))
+				await this.update(this.state.configuration, true, true)
+				this.props.setUpdating(false)
+			}
 
-		// onLoad = map => console.log("MAP LOADED")
+			loadFixes = async (configuration: MapConfiguration) => {
+				this.props.setUpdating(true)
+				await new Promise(async resolve => this.setState({
+					configuration,
+					fixes: await fixes(configuration),
+				}, resolve))
+				this.props.setUpdating(false)
+			}
+			update = async (configuration: MapConfiguration, save: boolean, forceSave: boolean) => {
+				this.setState({configuring: false})
+				if (forceSave || (save && !isEqual(configuration, this.state.configuration))) await this.loadFixes(configuration)
+			}
 
-		loadFixes = async (configuration: Configuration) => {
-			this.setState({updating: true})
-			this.setState({
-				configuration,
-				fixes: await fixes(configuration),
-				updating: false
-			})
-		}
-		update = async (configuration: Configuration, save: boolean, forceSave: boolean) => {
-			this.setState({configuring: false})
-			if (forceSave || (save && !isEqual(configuration, this.state.configuration))) await this.loadFixes(configuration)
-		}
+			div: HTMLDivElement | null = null
+			getDiv = (ref: HTMLDivElement | null) => this.div = ref
+			getMap = (): google.maps.Map | null => this.div === null ? null : new google.maps.Map(this.div, config.map.options)
 
-		render() {
-			const mapContainerStyle = {height: "100%"};
-			return <>
-				<style jsx>{`
-				.placeholder {
-					background-image: url("static/google-maps-placeholder.jpg");
-					background-size: cover;
-					background-position: center;
-					filter: grayscale(50%);
-					height: 100%;
-					width: 100%;
-					z-index: 1
-				}
-				.map {
-					z-index: 2
-				}
-            `}</style>
-				{(this.state.loading || this.state.updating) &&
-				<LinearProgress style={{position: "absolute", width: "100%", zIndex: 1}} />}
-				{this.state.loading && <div className="placeholder" />}
+			render = () => <>
 				<MapConfigurationInput
 					update={this.update}
 					configuration={this.state.configuration}
 					open={this.state.configuring} />
-				{!this.state.loading &&
-				<GoogleMap
-					mapContainerStyle={mapContainerStyle}
-					center={this.props.center}
-					zoom={this.props.zoom}
-					options={config.map.options}
-					/*onLoad={this.onLoad}*/>
-					<HeatmapLayer
+				{/*<GoogleMap
+				mapContainerStyle={mapContainerStyle}
+				center={this.props.center}
+				zoom={this.props.zoom}
+				options={mapOptions}>
+				<HeatmapLayer
+					data={positions(...this.state.fixes)}
+					options={config.map.heatmap.options} />
+			</GoogleMap>*/}
+
+				<div ref={this.getDiv} className={this.props.classes.map}>
+					{this.state.map &&
+					<Heatmap
+						setUpdating={this.props.setUpdating}
+						map={this.state.map}
 						data={positions(...this.state.fixes)}
-						options={config.map.heatmap.options} />
-				</GoogleMap>}
+						options={config.map.heatmap.options} />}
+				</div>
 
 				<Fab
 					variant="extended"
 					color="primary"
 					aria-label="edit"
 					className={this.props.classes.fab}
-					disabled={this.state.loading}
 					onClick={() => this.setState({configuring: true})}>
 					<TuneIcon className={this.props.classes.fabIcon} />
 					{this.props.t("fab")}
 				</Fab>
 			</>
-		}
-	}))
+		}))

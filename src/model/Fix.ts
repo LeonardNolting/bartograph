@@ -1,5 +1,5 @@
 import {Degree, KMH, Meter} from "../config";
-import Configuration from "./Configuration";
+import MapConfiguration from "./MapConfiguration";
 
 export default interface Fix {
 	altitude: Meter,
@@ -10,7 +10,7 @@ export default interface Fix {
 	vario: number
 }
 
-export async function fixes(configuration: Configuration): Promise<Array<Fix>> {
+export async function fixes(configuration: MapConfiguration): Promise<Array<Fix>> {
 	await new Promise(resolve => setTimeout(resolve, 2000))
 	return [
 		{altitude: 100, windDirection: 0, windSpeed: 10, lat: 37.782, lng: -122.447, vario: 1},

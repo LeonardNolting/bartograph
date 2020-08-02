@@ -4,10 +4,16 @@ export type KMH = number;
 
 const config = {
 	map: {
-		zoom: 7,
-		center: {lat: 51.163392, lng: 10.447718},
+		version: "weekly",
+		libraries: [
+			"visualization"
+		],
+
 		get options() {
 			return {
+				zoom: 7,
+				center: {lat: 51.163392, lng: 10.447718},
+
 				mapTypeId: 'terrain',
 				disableDefaultUI: true,
 				zoomControl: true,
@@ -34,13 +40,13 @@ const config = {
 				maxIntensity: 8 // Prevent exceptional thermals from ruining the scale
 			}
 		},
-		libraries: ["visualization"]
 	},
 	inputs: {
 		windSpeed: {step: 5},
 		windDirection: {step: 10, min: 0, max: 360},
 		altitude: {step: 50},
-		time: {step: 1800}
+		time: {},
+		month: {}
 	},
 	styles: {
 		fab: {

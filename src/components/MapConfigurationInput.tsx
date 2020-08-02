@@ -1,18 +1,19 @@
 import React, {Component} from "react";
 import config from "../config";
 import {
+	Button,
 	Dialog,
-	DialogTitle,
+	DialogActions,
 	DialogContent,
 	DialogContentText,
-	TextField,
-	DialogActions,
-	Button,
-	Grid, InputAdornment
+	DialogTitle,
+	Grid,
+	InputAdornment,
+	TextField
 } from "@material-ui/core";
-import {KeyboardTimePicker} from '@material-ui/pickers';
+import {DatePicker, TimePicker} from '@material-ui/pickers';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import Configuration from "../model/Configuration";
+import MapConfiguration from "../model/MapConfiguration";
 import {WithTranslation} from "next-i18next";
 import {i18n, withTranslation} from "../../i18n"
 import isEqual from "lodash/isEqual"
@@ -20,11 +21,11 @@ import isEqual from "lodash/isEqual"
 interface Props extends WithTranslation {
 	update,
 	open: boolean,
-	configuration: Configuration,
+	configuration: MapConfiguration,
 }
 
 interface State {
-	configuration: Configuration
+	configuration: MapConfiguration
 }
 
 export default withTranslation("mapConfigurationInput")(
@@ -43,7 +44,7 @@ export default withTranslation("mapConfigurationInput")(
 				console.log("default value found?", language.code, this.props.i18n.language)
 				return language.code === this.props.i18n.language
 			}))*/
-			return !open ? null :
+			return !this.props.open ? null :
 				<Dialog
 					open={this.props.open}
 					onClose={() => this.handleClose(false)}>
@@ -53,12 +54,14 @@ export default withTranslation("mapConfigurationInput")(
 						<Grid container spacing={3} direction="column">
 							<Grid item>
 								<Autocomplete
+									// @ts-ignore
 									options={process.env.availableLanguages}
 									getOptionLabel={language => language.label}
 									fullWidth
 									autoHighlight
 									disableClearable
 									autoComplete
+									// @ts-ignore
 									value={process.env.availableLanguages.find(language => language.code === this.props.i18n.language)}
 									onChange={(event, newValue: {code: string, label: string}) => i18n.changeLanguage(newValue.code)}
 									getOptionSelected={(option, value) => isEqual(option, value)}
@@ -119,7 +122,7 @@ export default withTranslation("mapConfigurationInput")(
 									inputProps={config.inputs.windDirection} fullWidth />
 							</Grid>
 							<Grid item>
-								<KeyboardTimePicker
+								<TimePicker
 									label={this.props.t("time")}
 									onChange={time => this.setState({
 										configuration: {
@@ -127,7 +130,29 @@ export default withTranslation("mapConfigurationInput")(
 											time
 										}
 									})}
+									views={["hours"]}
+									format="HH"
+									ampm={false}
+									showTodayButton
+									todayLabel={this.props.t("now")}
 									value={this.state.configuration.time || new Date()}
+									inputProps={config.inputs.time} fullWidth />
+							</Grid>
+							<Grid item>
+								<DatePicker
+									disableToolbar
+									format="MMMM"
+									autoOk
+									views={["month"]}
+									label={this.props.t("month")}
+									onChange={month => this.setState({
+										configuration: {
+											...this.state.configuration,
+											month
+										}
+									})}
+									variant="inline"
+									value={this.state.configuration.month || new Date()}
 									inputProps={config.inputs.time} fullWidth />
 							</Grid>
 						</Grid>
