@@ -133,8 +133,13 @@ export default withTranslation("mapConfigurationInput")(
 									views={["hours"]}
 									format="HH"
 									ampm={false}
-									showTodayButton
-									todayLabel={this.props.t("now")}
+									// showTodayButton
+									// todayLabel={this.props.t("now")}
+									helperText="UTC"
+									// cancelLabel={this.props.t("cancel")}
+									// okLabel={this.props.t("ok")}
+									variant="inline"
+									disableToolbar
 									value={this.state.configuration.time || new Date()}
 									inputProps={config.inputs.time} fullWidth />
 							</Grid>
@@ -153,7 +158,7 @@ export default withTranslation("mapConfigurationInput")(
 									})}
 									variant="inline"
 									value={this.state.configuration.month || new Date()}
-									inputProps={config.inputs.time} fullWidth />
+									inputProps={config.inputs.month} fullWidth />
 							</Grid>
 						</Grid>
 					</DialogContent>

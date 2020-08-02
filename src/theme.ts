@@ -1,7 +1,8 @@
 import {createMuiTheme} from '@material-ui/core/styles';
 import {red} from '@material-ui/core/colors';
+import muiLanguages from "./services/languages/mui";
+import {i18n} from "../i18n"
 
-// Create a theme instance.
 const theme = createMuiTheme({
 	palette: {
 		primary: {
@@ -17,6 +18,6 @@ const theme = createMuiTheme({
 			default: '#fff',
 		},
 	},
-});
+}, muiLanguages[i18n.language]);
 
 export default theme;

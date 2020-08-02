@@ -8,6 +8,8 @@ import {ThemeProvider} from '@material-ui/core/styles'
 import theme from '../theme';
 import {MuiPickersUtilsProvider} from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
+import {i18n} from "../../i18n"
+import dateFnsLanguages from "../services/languages/dateFns";
 
 const MyApp = ({Component, pageProps}: AppProps) => <>
 	<Head>
@@ -17,7 +19,7 @@ const MyApp = ({Component, pageProps}: AppProps) => <>
 	</Head>
 	<ThemeProvider theme={theme}>
 		<CssBaseline />
-		<MuiPickersUtilsProvider utils={DateFnsUtils}>
+		<MuiPickersUtilsProvider utils={DateFnsUtils} locale={dateFnsLanguages[i18n.language]}>
 			<Component {...pageProps} />
 		</MuiPickersUtilsProvider>
 	</ThemeProvider>
